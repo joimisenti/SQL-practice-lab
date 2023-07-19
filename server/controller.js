@@ -60,8 +60,10 @@ module.exports = {
 
     getPastAppointments: (req, res) => {
         sequelize.query(`SELECT a.appt_id, a.date, a.service_type, a.notes, u.first_name, u.last_name 
-        FROM cc_appointments a 
-        JOIN cc_users u ON a.client_id = u.user_id
+        FROM cc_appointments a
+        JOIN cc_emp_appts ea on a.appt_id = ea.appt_id
+        JOIN cc_employees e on e.emp_id = ea.emp_id
+        JOIN cc_users u ON e.user_id = u.user_id
         WHERE a.approved = true AND a.completed = true
         ORDER BY a.date desc;`)
             .then(dbRes => res.status(200).send(dbRes[0]))
